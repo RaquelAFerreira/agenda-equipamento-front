@@ -1,7 +1,5 @@
 import Styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
-import {TextField} from '@material-ui/core';
-
 
 export const Container = Styled(Grid)`
   background-color: #457b9d; 
@@ -33,9 +31,9 @@ export const Input = Styled.input`
     &+input {
       margin-left: 1vw;
     }
-    margin-top: 40vh;
+    margin-top: 5vh;
     border-radius: 3px;
     outline: none;
-    border: 1px solid black;
+    border: 1px solid white;
     padding: 5px;  
   `

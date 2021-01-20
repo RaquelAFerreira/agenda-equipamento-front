@@ -1,14 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Button, SolicitacoesColumn, Row, SolicitacaoContainer, TituloSituacao, Column, InformacaoRow, Container, ButtonOutline} from './styles';
+import React, { useState, useEffect } from 'react';
 import api from '../../../services/api';
-import Menu from '../../../components/Menu'
+import Menu from '../../../components/Menu';
+import { jsPDF } from "jspdf";
+import { geraTermoResponsabilidade} from '../../../components/GeraTermoResponsabilidade';
+import { Button, 
+            SolicitacoesColumn, 
+            Row, 
+            SolicitacaoContainer, 
+            TituloSituacao, 
+            Column, 
+            InformacaoRow, 
+            Container
+        } from './styles';
+
 
 export default function HistoricoSolicitacoes() {
     
     const [listaRecusada, setListaRecusada] = useState([]);
     const [listaInconclusa, setListaInconclusa] = useState([]);
     const [listaConcluida, setListaConcluida] = useState([]);
-        
+
     const listaMenu = [
         {
             nome: "Inicio",
@@ -50,7 +61,7 @@ export default function HistoricoSolicitacoes() {
         var data = new Date(item),
             dia  = data.getDate().toString(),
             diaF = (dia.length === 1) ? '0'+dia : dia,
-            mes  = (data.getMonth()+1).toString(), //+1 pois no getMonth Janeiro começa com zero.
+            mes  = (data.getMonth()+1).toString(),
             mesF = (mes.length === 1) ? '0'+mes : mes,
             anoF = data.getFullYear();
         return diaF+"/"+mesF+"/"+anoF;
@@ -88,9 +99,9 @@ export default function HistoricoSolicitacoes() {
                     <SolicitacoesColumn>
                         {listaConcluida.map((solicitacao) => (
                             <SolicitacaoContainer key={solicitacao.idSolicitacao}>
-                                <InformacaoRow>
+                                {/* <InformacaoRow>
                                     Código da Solicitação: {solicitacao.codigoSolicitacao} 
-                                </InformacaoRow>
+                                </InformacaoRow> */}
                                 <InformacaoRow>
                                     Solicitante: {solicitacao.solicitante.login} 
                                 </InformacaoRow>
@@ -121,9 +132,9 @@ export default function HistoricoSolicitacoes() {
                     <SolicitacoesColumn>
                         {listaRecusada.map((solicitacao) => (
                             <SolicitacaoContainer key={solicitacao.idSolicitacao}>
-                                <InformacaoRow>
+                                {/* <InformacaoRow>
                                     Código da Solicitação: {solicitacao.codigoSolicitacao} 
-                                </InformacaoRow>
+                                </InformacaoRow> */}
                                 <InformacaoRow>
                                     Solicitante: {solicitacao.solicitante.login} 
                                 </InformacaoRow>
@@ -137,7 +148,7 @@ export default function HistoricoSolicitacoes() {
                                     <InformacaoRow>
                                         {formataDeEnum(equipamento.categoria)} - {equipamento.codigoEquipamento}
                                     </InformacaoRow>   
-                                )} 
+                                )}
                             </SolicitacaoContainer>
                         ))
                         }
@@ -148,9 +159,9 @@ export default function HistoricoSolicitacoes() {
                     <SolicitacoesColumn>
                         {listaInconclusa.map((solicitacao) => (
                             <SolicitacaoContainer key={solicitacao.idSolicitacao}>
-                                <InformacaoRow>
+                                {/* <InformacaoRow>
                                     Código da Solicitação: {solicitacao.codigoSolicitacao} 
-                                </InformacaoRow>
+                                </InformacaoRow> */}
                                 <InformacaoRow>
                                     Solicitante: {solicitacao.solicitante.login} 
                                 </InformacaoRow>

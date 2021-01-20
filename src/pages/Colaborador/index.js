@@ -1,11 +1,21 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Menu from '../../components/Menu'
 import { UsuarioContext } from '../../contexts/user';
 import api from '../../services/api';
 import Logo from '../../assets/logo_branca.svg';
 import Banner from '../../assets/equipamentos.png';
 import ModalSolicitacao from '../../components/ModalSolicitacao';
-import { BannerContainer, Button, Header, SolicitacoesColumn, Row, SolicitacaoContainer, TituloSituacao, Column, InformacaoRow, Container, ButtonOutline} from './styles';
+import {BannerContainer, 
+        Button,
+        Header, 
+        SolicitacoesColumn, 
+        Row, 
+        SolicitacaoContainer, 
+        TituloSituacao, 
+        Column, 
+        InformacaoRow, 
+        Container, 
+        ButtonOutline
+} from './styles';
 
 
 
@@ -49,7 +59,7 @@ export default function Colaborador() {
                 direction="row"
                 container
             >
-                <img style={{width: "22vw"}} src={Logo}/>
+                <img alt="Logo da Alterdata" style={{width: "22vw"}} src={Logo}/>
                 <ButtonOutline onClick={()=> signOut()}>
                     SAIR
                 </ButtonOutline>
@@ -60,17 +70,16 @@ export default function Colaborador() {
                 container
             >
                 <BannerContainer>
-                    <img style={{height: "62vh" }} src={Banner}/>
+                    <img alt="Banner de solicitação" style={{height: "62vh" }} src={Banner}/>
                 </BannerContainer>
-
                 <Column>
                     <TituloSituacao> Suas Solicitações </TituloSituacao>
                     <SolicitacoesColumn>
                         {listaSolicitacoes.map((solicitacao) => (
                             <SolicitacaoContainer key={solicitacao.idSolicitacao}>
-                                <InformacaoRow>
+                                {/* <InformacaoRow>
                                     Código da Solicitação: {solicitacao.codigoSolicitacao} 
-                                </InformacaoRow>
+                                </InformacaoRow> */}
                                 <InformacaoRow>
                                     Situação: {solicitacao.situacao} 
                                 </InformacaoRow>
@@ -78,7 +87,7 @@ export default function Colaborador() {
                                     Equipamentos: 
                                 </InformacaoRow>
                                 {solicitacao.equipamentos.map((equipamento) =>
-                                    <InformacaoRow>
+                                    <InformacaoRow key={equipamento.idEquipamento}>
                                         {formataDeEnum(equipamento.categoria)} - {equipamento.codigoEquipamento}
                                     </InformacaoRow>   
                                 )} 

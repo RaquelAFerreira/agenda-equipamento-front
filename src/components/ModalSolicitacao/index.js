@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {Modal, TextField, Backdrop, Fade, MenuItem} from '@material-ui/core';
+import {TextField, Backdrop, Fade, MenuItem} from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import api from '../../services/api';
 import {ModalS, Paper, ButtonAdd, ButtonDelete, Button, ButtonOutline} from './styles'
 import { UsuarioContext } from '../../contexts/user';
 import Grid from '@material-ui/core/Grid';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ModalSolicitacao({handleClose, open}){
     const [campos, setCampos] = useState([{ value: null }]);
@@ -22,6 +22,13 @@ export default function ModalSolicitacao({handleClose, open}){
     const [horaLivre, setHoraLivre] = useState(true);
     const { user } = useContext(UsuarioContext);
 
+    const alert = (mensagem, tipo) => {
+        toast(
+            mensagem,
+            {type: tipo}
+        );
+    }
+
     const listaHorarios = [
         "09:00",
         "10:00",
@@ -35,7 +42,14 @@ export default function ModalSolicitacao({handleClose, open}){
 
     const listaCategorias = [
         'Monitor',
-        'Cadeira'
+        'Cadeira',
+        'Teclado',
+        'Mouse',
+        'Desktop',
+        'Laptop',
+        'Adaptador Hdmi',
+        'Cabo Displayport',
+        'Mesa'
     ]
 
     const handleAdicionaInput = () => {
@@ -75,21 +89,24 @@ export default function ModalSolicitacao({handleClose, open}){
         console.log(params);
         
         if (solicitante !== parseInt(solicitante)){
-            return alert("Adicione um solicitante")
+            alert("Adicione um solicitante", "warning")
+            return console.log(user);
         }
         if (horaLivre === false){
-            return alert("Esse horário já está marcado")
+            alert("Esse horário já está marcado", "warning")
+            return
         }
         if (listaEquipamentos.length === 0){
-            return alert("Adicione um equipamento")
+            alert("Adicione um equipamento", "warning")
+            return 
         }
 
         try {
             await api.post('solicitacao', params);
             mapSetEquipamentoIndisponivel(listaEquipamentos);
-        } catch (error) {
-            alert(error.response.data);
-        } finally{
+        } catch {
+            alert("Não foi possível efetuar a solicitação", "error");
+        } finally {
             setSolicitante('');
             setData('');
             setHora('');
@@ -109,7 +126,7 @@ export default function ModalSolicitacao({handleClose, open}){
 
     const setEquipamentoIndisponivel = (equipamento) => {
         api.put(`equipamento/setIndisponivel/${equipamento.idEquipamento}`)
-    return Promise.resolve('ok')
+        return Promise.resolve('ok')
     }
       
     const asyncSetEquipamentoIndisponivel = async (equipamento) => {
@@ -139,10 +156,10 @@ export default function ModalSolicitacao({handleClose, open}){
             if(response.data === ""){
                 setHoraLivre(true);
             } else {
-                alert("Esse horário já está marcado");
+                alert("Esse horário já está marcado", "warning");
             }
-        } catch(error) {
-            alert("Não foi possível verificar a hora solicitada")
+        } catch {
+            alert("Não foi possível verificar a hora solicitada", "error")
         }
     }
 
@@ -151,7 +168,7 @@ export default function ModalSolicitacao({handleClose, open}){
         if (dataEscolhida > getDataHoje() & verificaDiaReservado(dataEscolhida) === false) {
             setData(dataEscolhida);
         } else {
-            alert("Não é possível fazer um agendamento nesta data");
+            alert("Não é possível fazer um agendamento nesta data", "warning");
             setData(''); 
         }
     }
@@ -164,8 +181,8 @@ export default function ModalSolicitacao({handleClose, open}){
         try{
             const response = await api.get('usuario');
             setTodosUsuarios(response.data);
-        }catch(error){
-            console.log(error);
+        }catch {
+            alert("Erro ao carregar as informações", "error");
         }
     }
 
@@ -177,7 +194,7 @@ export default function ModalSolicitacao({handleClose, open}){
             setEquipamentoByCategoria(response.data);
         }catch(error){
             console.log(error);
-            alert("Equipamento do tipo "+categoria+" em falta")
+            alert("Equipamento do tipo "+categoria+" em falta", "warning")
         }
     }
 
@@ -220,6 +237,7 @@ export default function ModalSolicitacao({handleClose, open}){
                             }}
                             variant="outlined"
                             required
+                            style={{ marginRight: 17, marginBottom: 15}}
                             value={data}
                             onChange={e => 
                                 {verificaData(e.target.value)
@@ -227,7 +245,7 @@ export default function ModalSolicitacao({handleClose, open}){
                          >
                         </TextField>
 
-                        <TextField
+                        {/* <TextField
                             id="outlined-textarea"
                             label="Código da Solicitação"
                             placeholder="Placeholder"
@@ -240,12 +258,7 @@ export default function ModalSolicitacao({handleClose, open}){
                                 {setCodigoSolicitacao(e.target.value)
                             }}
                          >
-                        </TextField>
-                        </Grid>
-                        <Grid
-                            direction="row"
-                            container
-                        >
+                        </TextField> */}
                         {user.admin &&
                             <Autocomplete
                                 id="combo-box-demo"
@@ -347,6 +360,7 @@ export default function ModalSolicitacao({handleClose, open}){
                     </Paper>
                 </Fade>
             </ModalS>
+            <ToastContainer/>
         </div>
     )
 }

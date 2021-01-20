@@ -111,9 +111,9 @@ export default function Inicial() {
             <SolicitacoesColumn>
                 {listaAnalise.map((solicitacao) => (
                     <SolicitacaoContainer key={solicitacao.idSolicitacao}>
-                        <InformacaoRow>
+                        {/* <InformacaoRow>
                             Código da Solicitação: {solicitacao.codigoSolicitacao} 
-                        </InformacaoRow>
+                        </InformacaoRow> */}
                         <InformacaoRow>
                             Solicitante: {solicitacao.solicitante.login} 
                         </InformacaoRow>
@@ -157,9 +157,9 @@ export default function Inicial() {
             <SolicitacoesColumn>
                 {listaAgendada.map((solicitacao) => (
                     <SolicitacaoContainer key={solicitacao.idSolicitacao}>
-                        <InformacaoRow>
+                        {/* <InformacaoRow>
                             Código da Solicitação: {solicitacao.codigoSolicitacao} 
-                        </InformacaoRow>
+                        </InformacaoRow> */}
                         <InformacaoRow>
                             Solicitante: {solicitacao.solicitante.login} 
                         </InformacaoRow>

@@ -1,11 +1,25 @@
-import React, { useState, useEffect, useContext } from 'react';
-import {TableBody, Table, TableContainer, Paper, TableCell, TableRow} from '@material-ui/core';
-import {TextoTr, TextoTh, Container, Row, Button, TabelaRow, ButtonOutline, ButtonAdd, ButtonCancel} from './styles';
-import {Modal, TextField, Backdrop, Fade, MenuItem} from '@material-ui/core';
+import React, {useState, useEffect} from 'react';
+import {TextField, Backdrop, Fade, MenuItem} from '@material-ui/core';
 import {ModalE, PaperModal} from './styles';
 import Menu from '../../../components/Menu';
 import api from '../../../services/api';
 import Grid from '@material-ui/core/Grid';
+import {TableBody, 
+        Table, 
+        TableContainer, 
+        Paper, 
+        TableCell
+} from '@material-ui/core';
+import {TextoTr,
+        TextoTh,
+        Container, 
+        Row, 
+        Button, 
+        TabelaRow, 
+        ButtonOutline, 
+        ButtonAdd, 
+        ButtonCancel
+} from './styles'; 
 
 
 export default function Equipamentos() {
@@ -29,7 +43,14 @@ export default function Equipamentos() {
 
     const listaCategorias = [
         'Monitor',
-        'Cadeira'
+        'Cadeira',
+        'Teclado',
+        'Mouse',
+        'Desktop',
+        'Laptop',
+        'Adaptador Hdmi',
+        'Cabo Displayport',
+        'Mesa'
     ]
 
     const handleOpen = () => {
