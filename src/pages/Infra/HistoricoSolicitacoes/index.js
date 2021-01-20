@@ -56,6 +56,18 @@ export default function HistoricoSolicitacoes() {
         return diaF+"/"+mesF+"/"+anoF;
     }
 
+    const criadorPDF = (solicitacao) => {
+        const doc = new jsPDF();
+        doc.setFontSize(10);
+        var splitTitle = doc.splitTextToSize(geraTermoResponsabilidade(solicitacao.solicitante.nome, 
+                                                    solicitacao.solicitante.login, 
+                                                    solicitacao.solicitante.cpf,
+                                                    solicitacao.equipamentos
+                                                    ), 180);
+        doc.text(15, 20, splitTitle);
+        doc.save(`agendamento de ${solicitacao.solicitante.login}-${solicitacao.data}.pdf`);
+    }
+
     useEffect(
         () => {
             loadSolicitacoesBySituacao("RECUSADA"); 
@@ -93,6 +105,11 @@ export default function HistoricoSolicitacoes() {
                                         {formataDeEnum(equipamento.categoria)} - {equipamento.codigoEquipamento}
                                     </InformacaoRow>   
                                 )} 
+                                <Button
+                                    onClick={() => criadorPDF(solicitacao)}
+                                >
+                                    Baixar Termo
+                                </Button> 
                             </SolicitacaoContainer>
                         ))
                         }
