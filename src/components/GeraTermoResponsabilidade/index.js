@@ -1,5 +1,7 @@
 export function geraTermoResponsabilidade(nome, login, cpf, equipamentos) {
-    const titulo = `TERMO DE RESPONSABILIDADE PARA EQUIPAMENTOS
+
+    const titulo = `                                          TERMO DE RESPONSABILIDADE PARA EQUIPAMENTOS
+    
     `
     const inicio = `A ALTERDATA TECNOLOGIA EM INFORMÁTICA LTDA, estabelecida na Rua Prefeito Sebastião Teixeira, 227- Centro - Teresópolis, inscrita no CNPJ sob o n° 36.462.778./0001-60, doravante denominada EMPRESA, entrega neste ato, a titulo de empréstimo, o(s) equipamento(s)
     `

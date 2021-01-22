@@ -99,9 +99,9 @@ export default function HistoricoSolicitacoes() {
                     <SolicitacoesColumn>
                         {listaConcluida.map((solicitacao) => (
                             <SolicitacaoContainer key={solicitacao.idSolicitacao}>
-                                {/* <InformacaoRow>
+                                <InformacaoRow>
                                     Código da Solicitação: {solicitacao.codigoSolicitacao} 
-                                </InformacaoRow> */}
+                                </InformacaoRow>
                                 <InformacaoRow>
                                     Solicitante: {solicitacao.solicitante.login} 
                                 </InformacaoRow>
@@ -132,9 +132,9 @@ export default function HistoricoSolicitacoes() {
                     <SolicitacoesColumn>
                         {listaRecusada.map((solicitacao) => (
                             <SolicitacaoContainer key={solicitacao.idSolicitacao}>
-                                {/* <InformacaoRow>
+                                <InformacaoRow>
                                     Código da Solicitação: {solicitacao.codigoSolicitacao} 
-                                </InformacaoRow> */}
+                                </InformacaoRow>
                                 <InformacaoRow>
                                     Solicitante: {solicitacao.solicitante.login} 
                                 </InformacaoRow>
@@ -159,9 +159,9 @@ export default function HistoricoSolicitacoes() {
                     <SolicitacoesColumn>
                         {listaInconclusa.map((solicitacao) => (
                             <SolicitacaoContainer key={solicitacao.idSolicitacao}>
-                                {/* <InformacaoRow>
+                                <InformacaoRow>
                                     Código da Solicitação: {solicitacao.codigoSolicitacao} 
-                                </InformacaoRow> */}
+                                </InformacaoRow>
                                 <InformacaoRow>
                                     Solicitante: {solicitacao.solicitante.login} 
                                 </InformacaoRow>

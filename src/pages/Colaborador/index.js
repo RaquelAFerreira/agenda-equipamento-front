@@ -47,6 +47,16 @@ export default function Colaborador() {
         });
     }
 
+    const dataFormatada = (item) => {
+        var data = new Date(item),
+            dia  = data.getDate().toString(),
+            diaF = (dia.length === 1) ? '0'+dia : dia,
+            mes  = (data.getMonth()+1).toString(),
+            mesF = (mes.length === 1) ? '0'+mes : mes,
+            anoF = data.getFullYear();
+        return diaF+"/"+mesF+"/"+anoF;
+    }
+
     useEffect(
         () => {
             loadSolicitacoes();
@@ -84,11 +94,14 @@ export default function Colaborador() {
                                     Situação: {solicitacao.situacao} 
                                 </InformacaoRow>
                                 <InformacaoRow>
+                                    Data: {dataFormatada(solicitacao.data)}, {solicitacao.hora}
+                                </InformacaoRow>
+                                <InformacaoRow>
                                     Equipamentos: 
                                 </InformacaoRow>
                                 {solicitacao.equipamentos.map((equipamento) =>
                                     <InformacaoRow key={equipamento.idEquipamento}>
-                                        {formataDeEnum(equipamento.categoria)} - {equipamento.codigoEquipamento}
+                                        {formataDeEnum(equipamento.categoria)}
                                     </InformacaoRow>   
                                 )} 
 
