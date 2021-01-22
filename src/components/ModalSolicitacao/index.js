@@ -2,21 +2,17 @@ import React, { useState, useEffect, useContext } from 'react';
 import {TextField, Backdrop, Fade, MenuItem} from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import api from '../../services/api';
-import {ModalS, Paper, ButtonAdd, ButtonDelete, Button, ButtonOutline} from './styles'
+import {ModalS, Paper, Button, ButtonOutline} from './styles'
 import { UsuarioContext } from '../../contexts/user';
 import Grid from '@material-ui/core/Grid';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 export default function ModalSolicitacao({handleClose, open}){
-    const [campos, setCampos] = useState([{ value: null }]);
     const [todosUsuarios, setTodosUsuarios] = useState([]);
-    const [codigoSolicitacao, setCodigoSolicitacao] = useState('');
     const [solicitante, setSolicitante] = useState();
     const [listaEquipamentos, setListaEquipamentos] = useState([]);
+    const [listaEquipamentosDisponiveis, setListaEquipamentosDisponiveis] = useState([]);
     const [listaDiasReservados, setListaDiasReservados] = useState([]);
-    const [equipamentoByCategoria, setEquipamentoByCategoria] = useState();
-    const [situacao, setSituacao] = useState('');
     const [data, setData] = useState('');
     const [hora, setHora] = useState('');
     const [horaLivre, setHoraLivre] = useState(true);
@@ -40,30 +36,23 @@ export default function ModalSolicitacao({handleClose, open}){
         "17:00"
     ]
 
-    const listaCategorias = [
-        'Monitor',
-        'Cadeira',
-        'Teclado',
-        'Mouse',
-        'Desktop',
-        'Laptop',
-        'Adaptador Hdmi',
-        'Cabo Displayport',
-        'Mesa'
-    ]
-
-    const handleAdicionaInput = () => {
-        const quantidade = [...campos];
-        quantidade.push({ value: null });
-        setCampos(quantidade);
+    const loadSituacao = () => {
+         if(user.admin === false) {
+            return 'ANALISE';
+        }
+        return 'AGENDADA';
     }
-  
-    const handleRemoveInput = (i, equipamento) => {
-        const quantidade = [...campos];
-        quantidade.splice(i, 1);
-        setCampos(quantidade);
-        let name = equipamento;
-        setListaEquipamentos(listaEquipamentos.filter((equipamento)=>(equipamento !== name)));
+
+    const loadSolicitante = () => {
+        if(user.admin === false) {
+           setSolicitante(user.idUsuario);
+       }
+   }
+
+    const loadEquipamentos = async () => {
+        const response = await api.get(`equipamento/disponiveis`)
+
+            setListaEquipamentosDisponiveis(response.data);
     }
     
     const handleSolicitacao = async (e) => {
@@ -71,24 +60,18 @@ export default function ModalSolicitacao({handleClose, open}){
 
         loadSolicitacaoByDataHora(data, hora);
 
-        if(user.admin === false) {
-            setSolicitante(user.idUsuario);
-            setSituacao('ANALISE');
-        } else {
-            setSituacao('AGENDADA');
-        }
+        loadSolicitante();
         
         const params = { 
-            solicitante: parseInt(solicitante),
-            situacao: situacao,
+            solicitante: solicitante,
+            situacao: loadSituacao(),
             equipamentos: listaEquipamentos,
             data: data,
-            hora: hora,
-            codigoSolicitacao: codigoSolicitacao
+            hora: hora
         }
         console.log(params);
         
-        if (solicitante !== parseInt(solicitante)){
+        if (solicitante === null || solicitante === ""){
             alert("Adicione um solicitante", "warning")
             return console.log(user);
         }
@@ -112,6 +95,7 @@ export default function ModalSolicitacao({handleClose, open}){
             setHora('');
             setListaEquipamentos([]);
             handleClose();
+            loadEquipamentos();
         }
     }
 
@@ -162,16 +146,6 @@ export default function ModalSolicitacao({handleClose, open}){
             alert("Não foi possível verificar a hora solicitada", "error")
         }
     }
-
-    const verificaData = (dataEscolhida) => {
-        loadDiasReservados();
-        if (dataEscolhida > getDataHoje() & verificaDiaReservado(dataEscolhida) === false) {
-            setData(dataEscolhida);
-        } else {
-            alert("Não é possível fazer um agendamento nesta data", "warning");
-            setData(''); 
-        }
-    }
     
     const getDataHoje = () => {
         return new Date().toISOString().slice(0, 10);
@@ -186,26 +160,40 @@ export default function ModalSolicitacao({handleClose, open}){
         }
     }
 
-    const loadEquipamentoByCategoria = async (categoria) => {
-        
-        try{
-            const response = await api.get(`equipamento/categoria/${formataParaEnum(categoria)}`);
-            setListaEquipamentos(a => [...a, (response.data)]);
-            setEquipamentoByCategoria(response.data);
-        }catch(error){
-            console.log(error);
-            alert("Equipamento do tipo "+categoria+" em falta", "warning")
+    const verificaData = (dataEscolhida) => {
+        loadDiasReservados();
+        if (dataEscolhida < getDataHoje()) {
+            alert("Não é possível fazer um agendamento para hoje ou dias anteriores ao atual", "warning");
+            setData('');
+        } else if (verificaDiaReservado(dataEscolhida)) {
+            alert("O dia escolhido é um feriado ou dia reservado. Por favor, escolha outro", "warning");
+            setData('');
+        } else {
+            setData(dataEscolhida);
         }
     }
-
-    const formataParaEnum = (item) => {
-        const semEspacos = item.replace(" ","_");
-        return semEspacos.toUpperCase();
+    
+    const formataDeEnum = (string) => {
+        return string.replace(/\S*/g,  (word) => {
+            return word.charAt(0) + word.slice(1).toLowerCase();
+        });
     }
 
     useEffect(
         () => {
             loadUsuarios();
+        }, []
+    )
+
+    useEffect(
+        () => {
+            loadEquipamentos();
+        }, []
+    )
+
+    useEffect(
+        () => {
+            loadSolicitante();
         }, []
     )
 
@@ -245,20 +233,6 @@ export default function ModalSolicitacao({handleClose, open}){
                          >
                         </TextField>
 
-                        {/* <TextField
-                            id="outlined-textarea"
-                            label="Código da Solicitação"
-                            placeholder="Placeholder"
-                            required
-                            multiline
-                            style={{width: "190px", marginLeft: 17, marginBottom: 15}}
-                            variant="outlined"
-                            value={codigoSolicitacao}
-                            onChange={e => 
-                                {setCodigoSolicitacao(e.target.value)
-                            }}
-                         >
-                        </TextField> */}
                         {user.admin &&
                             <Autocomplete
                                 id="combo-box-demo"
@@ -301,46 +275,23 @@ export default function ModalSolicitacao({handleClose, open}){
                         </TextField>
                         </Grid>
 
-                        {campos.map((campo, index) => {
-                            return (
-                            <div key={`${campo}-${index}`}>
-                                <TextField
-                                    id="outlined-textarea"
-                                    style={{width: "150px", marginBottom: 15}}
-                                    label="Equipamento"
-                                    select
-                                    placeholder="Placeholder"
-                                    multiline
-                                    variant="outlined"
-                                    required
-                                    onChange={e => 
-                                        {loadEquipamentoByCategoria(e.target.value)}}
-                                >{
-                                    listaCategorias.map(categoria => (
-                                        <MenuItem  
-                                            key={categoria}
-                                            value={categoria}
-                                        >
-                                            {categoria}
-                                        </MenuItem>
-                                    ))                                
-                                }
-                                </TextField>
-                                <ButtonDelete 
-                                    type="button" 
-                                    onClick={() => handleRemoveInput(index, equipamentoByCategoria)}>
-                                x
-                                </ButtonDelete>
-                            </div>
-                            );
-                        })}
+                        <Autocomplete
+                            multiple
+                            id="tags-outlined"
+                            options={listaEquipamentosDisponiveis}
+                            getOptionLabel={(option) => formataDeEnum(option.categoria)}
+                            filterSelectedOptions
+                            style={{lineBreak: "auto", width: "40vw"}}
+                            onChange={(event, value) => setListaEquipamentos(value)}
+                            renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="outlined"
+                                label="Equipamentos"
+                            />
+                            )}
+                        />       
 
-                        <ButtonAdd
-                            type="button" 
-                            onClick={() => handleAdicionaInput()}
-                        >
-                            Adicionar equipamento
-                        </ButtonAdd>
                         <Grid
                             container
                             direction="row"
@@ -349,7 +300,7 @@ export default function ModalSolicitacao({handleClose, open}){
                             <Button
                                 onClick={e => handleSolicitacao(e)}
                             >
-                                Adicionar
+                                Solicitar
                             </Button>
                             <ButtonOutline
                                 onClick={handleClose}
