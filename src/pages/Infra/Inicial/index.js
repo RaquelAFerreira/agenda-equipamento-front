@@ -35,7 +35,6 @@ export default function Inicial() {
         }
     }   
 
-        
     const setEquipamentoDisponivel = (equipamento) => {
         api.put(`equipamento/setDisponivel/${equipamento.idEquipamento}`)
     return Promise.resolve('ok')
@@ -78,26 +77,26 @@ export default function Inicial() {
         });
     }
 
-        const listaMenu = [
-            {
-                nome: "Equipamentos",
-                rota: "/equipamentos"
-            },
-            {
-                nome: "Histórico de Solicitações",
-                rota: "/historico-solicitacoes"
-            }
-        ]
-
-        const dataFormatada = (item) => {
-            var data = new Date(item),
-                dia  = data.getDate().toString(),
-                diaF = (dia.length === 1) ? '0'+dia : dia,
-                mes  = (data.getMonth()+1).toString(), //+1 pois no getMonth Janeiro começa com zero.
-                mesF = (mes.length === 1) ? '0'+mes : mes,
-                anoF = data.getFullYear();
-            return diaF+"/"+mesF+"/"+anoF;
+    const listaMenu = [
+        {
+            nome: "Equipamentos",
+            rota: "/equipamentos"
+        },
+        {
+            nome: "Histórico de Solicitações",
+            rota: "/historico-solicitacoes"
         }
+    ]
+
+    const dataFormatada = (item) => {
+        var data = new Date(item),
+            dia  = data.getDate().toString(),
+            diaF = (dia.length === 1) ? '0'+dia : dia,
+            mes  = (data.getMonth()+1).toString(), 
+            mesF = (mes.length === 1) ? '0'+mes : mes,
+            anoF = data.getFullYear();
+        return diaF+"/"+mesF+"/"+anoF;
+    }
 
     return (
         <Container>      
@@ -111,9 +110,9 @@ export default function Inicial() {
             <SolicitacoesColumn>
                 {listaAnalise.map((solicitacao) => (
                     <SolicitacaoContainer key={solicitacao.idSolicitacao}>
-                        {/* <InformacaoRow>
+                        <InformacaoRow>
                             Código da Solicitação: {solicitacao.codigoSolicitacao} 
-                        </InformacaoRow> */}
+                        </InformacaoRow>
                         <InformacaoRow>
                             Solicitante: {solicitacao.solicitante.login} 
                         </InformacaoRow>
@@ -157,9 +156,9 @@ export default function Inicial() {
             <SolicitacoesColumn>
                 {listaAgendada.map((solicitacao) => (
                     <SolicitacaoContainer key={solicitacao.idSolicitacao}>
-                        {/* <InformacaoRow>
+                        <InformacaoRow>
                             Código da Solicitação: {solicitacao.codigoSolicitacao} 
-                        </InformacaoRow> */}
+                        </InformacaoRow>
                         <InformacaoRow>
                             Solicitante: {solicitacao.solicitante.login} 
                         </InformacaoRow>
@@ -199,14 +198,11 @@ export default function Inicial() {
             </Column>
             </Row>
 
-
-               <Link to="/historico-solicitacoes">
-                    <ButtonSolicitacao>
-                        Histórico de Solicitações
-                    </ButtonSolicitacao>
-                </Link> 
-
-
+            <Link to="/historico-solicitacoes">
+                <ButtonSolicitacao>
+                    Histórico de Solicitações
+                </ButtonSolicitacao>
+            </Link> 
 
         </Container>
     )

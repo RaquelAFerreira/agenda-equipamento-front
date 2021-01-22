@@ -1,53 +1,6 @@
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 
-// export const Button = styled.button`
-//     width: 10vw;
-//     height: 40px;
-//     color: #fff;
-//     margin-top: 50px;
-//     border: none;
-//     border-radius: 4px;
-//     background-color: #165091;
-//     outline: none;
-//     &+button {
-//         margin-left: 2%;
-//     }
-//     color: white;
-//     min-width: 80px;
-
-// `
-
-// export const Row = styled(Grid)`
-// align-items: center;
-// justify-content: center;
-// margin-top: 20px;
-// margin-bottom: 10px;
-
-// `
-
-// export const ButtonOutline = styled.button`
-//     width: 10vw;
-//     height: 40px;
-//     color: #fff;
-//     margin-top: 50px;
-//     border: 1px solid #165091;
-//     border-radius: 4px;
-//     background-color: transparent;
-//     outline: none;
-//     &+button {
-//         margin-left: 5%;
-//     }
-//     color: #165091;
-//     min-width: 80px;
-
-// `
-    
-// export const Container = styled(Grid)`
-//     margin-left: 200px;
-    
-// `
-
 export const Button = styled.button`
     width: 6vw;
     height: 30px;
